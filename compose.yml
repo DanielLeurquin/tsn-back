@@ -20,4 +20,4 @@ volumes:
 
 networks:
   forix:
-    driver: bridge
+    external: true
