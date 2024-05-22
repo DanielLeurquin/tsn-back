@@ -6,6 +6,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+
     volumes:
       - /tmp
     environment:
@@ -15,3 +16,7 @@ services:
 
 volumes:
   tmp:
+
+networks:
+  forix:
+    driver: bridge
