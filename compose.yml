@@ -22,4 +22,4 @@ networks:
   forix:
     driver: bridge
 
-name: "tsn_back"
+name: tsn_back
