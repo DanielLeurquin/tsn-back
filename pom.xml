@@ -14,9 +14,10 @@
 	<name>tsn-back</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
-		<java.version>21</java.version>
+		<java.version>17</java.version>
 		<org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
-		<org.apache.maven.plugins.version>3.5.1</org.apache.maven.plugins.version>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -117,7 +118,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${org.apache.maven.plugins.version}</version>
 				<configuration>
 					<compilerArgs>
 						<arg>-parameters</arg>
