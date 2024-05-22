@@ -12,7 +12,7 @@ services:
     environment:
       - PROFILE=dev # You can change this to the desired profile, e.g., prod, test, etc.
       - POSTGRES_PASSWORD=postgres
-    entrypoint: ["java", "-jar", "/forix_back.jar", "--spring.profiles.active=${PROFILE}"]
+    entrypoint: ["java", "-jar", "/forix_back.jar", "--spring.profiles.active=dev"]
 
 volumes:
   tmp:
