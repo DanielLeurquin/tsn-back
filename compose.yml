@@ -21,5 +21,3 @@ volumes:
 networks:
   forix:
     driver: bridge
-
-name: tsn_back
