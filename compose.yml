@@ -3,6 +3,8 @@ version: '3.8'
 services:
   tsn_back:
     image: tsn_back:latest
+    networks:
+      - forix
     build:
       context: .
       dockerfile: Dockerfile
