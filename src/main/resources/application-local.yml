@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/tsn_db
+  jpa:
+    show-sql: 'true'
+
+
+cors:
+  allowed-origin: http://localhost:3000
+  insecure: false
+
+jwt:
+  secret: IZRQ3mLm0QGmUn0Lq7CMsHdn6oTtHYJi7eq2vttoXDcrpgznpS
+  refresh-secret: WS92yJYqxWD8clPovKwmRTE0jwNUmTLVUfFMSiEM0YAHEyhNCy
+  token-duration: 1800               # default: 30 min
+  refresh-token-duration: 2592000      # default: 1 month
+  issuer: TSN

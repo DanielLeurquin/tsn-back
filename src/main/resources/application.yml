@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: tsn-back
+  profiles:
+    active: local
+
+  flyway:
+    password: ${spring.datasource.password}
+    user: ${spring.datasource.username}
+    placeholders:
+      password: ${spring.datasource.password}
+      username: ${spring.datasource.username}
+    locations: classpath:db/migration
+    url: ${spring.datasource.url}
+
+server:
+  error:
+    include-message: always
+    include-exception: true
+    include-binding-errors: always

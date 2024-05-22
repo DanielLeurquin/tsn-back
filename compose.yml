@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  tsn_back:
+    image: tsn_back:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - /tmp
+    environment:
+      - PROFILE=dev # You can change this to the desired profile, e.g., prod, test, etc.
+      - POSTGRES_PASSWORD=postgres
+    entrypoint: ["java", "-jar", "/forix_back.jar", "--spring.profiles.active=${PROFILE}"]
+
+volumes:
+  tmp:
