@@ -94,6 +94,7 @@ public class SecurityService {
 
     }
 
+
     public TokenSet register(UserRegisterDto dto) {
         var existingUser = userRepository.findById(dto.getId());
         if(existingUser.isPresent()){

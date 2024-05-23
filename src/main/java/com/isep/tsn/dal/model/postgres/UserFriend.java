@@ -4,12 +4,10 @@ import com.isep.tsn.dal.model.enums.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
-
-@Entity
 @Data
+@Entity
 @Table(name = "user", schema = "public")
-public class User {
+public class UserFriend {
 
     @Id
     String id;
@@ -21,11 +19,4 @@ public class User {
     @Enumerated(EnumType.STRING)
     Role role;
 
-    @OneToMany(mappedBy = "userId")
-    List<Post> posts;
-
-    @ManyToMany
-    @JoinTable(name = "user_friend", joinColumns = @JoinColumn(name = "user1"),
-            inverseJoinColumns = @JoinColumn(name = "user2"))
-    List<UserFriend> friends;
 }

@@ -1,11 +1,10 @@
 package com.isep.tsn.controller;
 
+import com.isep.tsn.dal.model.dto.CreatePostDto;
 import com.isep.tsn.dal.model.dto.PostDto;
 import com.isep.tsn.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,6 +18,11 @@ public class PostController {
     @GetMapping
     public List<PostDto> getPosts() {
         return postService.findAll();
+    }
+
+    @PostMapping
+    public PostDto addPost(@RequestBody CreatePostDto dto) {
+        return postService.addPost(dto);
     }
 
 }

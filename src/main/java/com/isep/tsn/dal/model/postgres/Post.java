@@ -14,8 +14,6 @@ public class Post {
 
     String postText;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    User user;
+    String userId;
 
 }

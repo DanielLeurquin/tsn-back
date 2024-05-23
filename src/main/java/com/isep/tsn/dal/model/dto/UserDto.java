@@ -16,6 +16,8 @@ public class UserDto {
 
     Role role;
 
+    List<PostDto> posts;
+
     List<UserFriendDto> friends;
 
 }

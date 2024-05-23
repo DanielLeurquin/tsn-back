@@ -1,6 +1,7 @@
 package com.isep.tsn.mapper;
 
 import com.isep.tsn.dal.model.dto.UserDto;
+import com.isep.tsn.dal.model.dto.UserFriendDto;
 import com.isep.tsn.dal.model.dto.UserRegisterDto;
 import com.isep.tsn.dal.model.postgres.User;
 import org.mapstruct.Mapper;
@@ -9,7 +10,8 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
-        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+        uses = {PostMapper.class})
 public interface UserMapper {
 
     static UserMapper instance() {
@@ -17,6 +19,8 @@ public interface UserMapper {
     }
 
     UserDto convertToDto(User user);
+
+    UserFriendDto convertToFriendDto(User user);
     User convertToEntity(UserRegisterDto userRegisterDto);
 
 }
