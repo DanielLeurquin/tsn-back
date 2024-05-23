@@ -1,5 +1,6 @@
 package com.isep.tsn.controller;
 
+import com.isep.tsn.dal.model.dto.UserAssignSubjectDto;
 import com.isep.tsn.dal.model.dto.UserDto;
 import com.isep.tsn.dal.model.dto.UserFriendDto;
 import com.isep.tsn.mapper.UserMapper;
@@ -45,5 +46,14 @@ public class UserController {
                 .collect(Collectors.toList());
     }
 
+    @PostMapping("/assignSubject")
+    public UserDto assignSubject(@RequestBody UserAssignSubjectDto userAssignSubjectDto) {
+        return userService.userAssignSubject(userAssignSubjectDto);
+    }
+
+    @GetMapping("/friendRecommendation")
+    public List<UserFriendDto> currentUserFriendRecommendation(@RequestParam Integer depth){
+        return userService.currentUserFriendRecommendation(depth);
+    }
 
 }

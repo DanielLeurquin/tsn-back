@@ -1,6 +1,8 @@
 package com.isep.tsn.service;
 
 import com.isep.tsn.dal.model.dto.SubjectDto;
+import com.isep.tsn.dal.model.postgres.Subject;
+import com.isep.tsn.dal.model.postgres.User;
 import com.isep.tsn.dal.postgres.repository.SubjectRepository;
 import com.isep.tsn.mapper.SubjectMapper;
 import jakarta.transaction.Transactional;
@@ -21,6 +23,24 @@ public class SubjectService {
                 .stream()
                 .map(SubjectMapper.instance()::convertToDto)
                 .toList();
+    }
+
+    public SubjectDto addSubject(SubjectDto subjectDto) {
+        var sub = new Subject();
+        sub.setSubjectName(subjectDto.getSubjectName());
+
+        return SubjectMapper.instance()
+                .convertToDto(subjectRepository.save(sub));
+                        
+    }
+
+    public List<SubjectDto> usersCommonSubjects(User user1, User user2){
+        return user1.getSubjects()
+                .stream()
+                .filter(user2.getSubjects()::contains)
+                .map(SubjectMapper.instance()::convertToDto)
+                .toList();
+
     }
 
 }

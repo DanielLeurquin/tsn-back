@@ -4,8 +4,6 @@ import lombok.Data;
 
 @Data
 public class SubjectDto {
-
-    Long id;
-    String SubjectName;
+    String subjectName;
 
 }

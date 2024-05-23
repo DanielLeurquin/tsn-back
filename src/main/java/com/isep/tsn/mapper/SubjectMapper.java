@@ -15,4 +15,6 @@ public interface SubjectMapper {
     }
 
     SubjectDto convertToDto(Subject subject);
+
+    Subject convertToEntity(SubjectDto subjectDto);
 }

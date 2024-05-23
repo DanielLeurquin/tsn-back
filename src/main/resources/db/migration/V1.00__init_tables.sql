@@ -21,6 +21,12 @@ CREATE TABLE public.post
 
 CREATE TABLE public.subject
 (
-    id bigserial not null constraint subject_id_pkey primary key,
+    subject_name varchar not null constraint subject_name_pkey primary key
+
+);
+
+CREATE TABLE public.user_subject
+(
+    user_id varchar,
     subject_name varchar
 );

@@ -25,6 +25,11 @@ public class User {
     List<Post> posts;
 
     @ManyToMany
+    @JoinTable(name = "user_subject", joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "subject_name"))
+    List<Subject> subjects;
+
+    @ManyToMany
     @JoinTable(name = "user_friend", joinColumns = @JoinColumn(name = "user1"),
             inverseJoinColumns = @JoinColumn(name = "user2"))
     List<UserFriend> friends;

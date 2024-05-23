@@ -9,8 +9,6 @@ import lombok.Data;
 public class Subject {
 
     @Id
-    Long id;
-
-    String SubjectName;
+    String subjectName;
 
 }

@@ -1,15 +1,21 @@
 package com.isep.tsn.service;
 
+import com.isep.tsn.dal.model.dto.UserAssignSubjectDto;
 import com.isep.tsn.dal.model.dto.UserDto;
+import com.isep.tsn.dal.model.dto.UserFriendDto;
 import com.isep.tsn.dal.model.postgres.User;
 import com.isep.tsn.dal.model.postgres.UserFriend;
+import com.isep.tsn.dal.postgres.repository.SubjectRepository;
 import com.isep.tsn.dal.postgres.repository.UserRepository;
+import com.isep.tsn.exceptions.BusinessException;
 import com.isep.tsn.mapper.UserMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +28,12 @@ public class UserService {
 
     @Autowired
     SecurityService securityService;
+
+    @Autowired
+    SubjectRepository subjectRepository;
+
+    @Autowired
+    SubjectService subjectService;
 
     public List<UserDto> getAllUsers() {
         return userRepository.findAll()
@@ -46,7 +58,8 @@ public class UserService {
     //todo make the same thing with algorithm implementation
     public UserDto addFriend(String friendId) {
         var user1 = getUser(securityService.getLoggedId());
-        var user2 = userRepository.findById(friendId).orElseThrow();
+        var user2 = userRepository.findById(friendId)
+                .orElseThrow();
 
         user1.getFriends()
                 .add(UserToUserFriend(user2));
@@ -58,39 +71,76 @@ public class UserService {
                 .convertToDto(userRepository.save(user1));
 
     }
-     public UserFriend UserToUserFriend(User user){
+
+    public UserFriend UserToUserFriend(User user) {
         var userFriend = new UserFriend();
         userFriend.setId(user.getId());
         userFriend.setRole(user.getRole());
         userFriend.setEmail(user.getEmail());
         userFriend.setPassword(user.getPassword());
         return userFriend;
-     }
+    }
 
-    public List<User> userListFromUserFriendList(List<UserFriend> userFriendList){
+    public List<User> userListFromUserFriendList(List<UserFriend> userFriendList) {
         List<User> userList = new ArrayList<>();
-        for(UserFriend userFriend : userFriendList){
+        for (UserFriend userFriend : userFriendList) {
             userList.add(getUser(userFriend.getId()));
         }
         return userList;
     }
 
-    public List<User> getFoafOfUser(User user, int depth){
-        if(depth == 0){
+    public List<User> getFoafOfUser(User user, int depth) {
+        if (depth == 0) {
             return List.of();
         }
         List<User> finalList = new ArrayList<>(userListFromUserFriendList(user.getFriends()));
         var friendList = userListFromUserFriendList(user.getFriends());
-        for(User u : friendList){
-            finalList.addAll(getFoafOfUser(u, depth-1));
+        for (User u : friendList) {
+            finalList.addAll(getFoafOfUser(u, depth - 1));
         }
-        var unique = finalList.stream().distinct().collect(Collectors.toList());
-        if(unique.contains(user)){
+        var unique = finalList.stream()
+                .distinct()
+                .collect(Collectors.toList());
+        if (unique.contains(user)) {
             unique.remove(user);
         }
 
         return unique;
 
+    }
+
+    public UserDto userAssignSubject(UserAssignSubjectDto dto) {
+        var user = getUser(dto.getUserId());
+        var subjects = user.getSubjects();
+
+        var subjectOpt = subjectRepository.findById(dto.getSubjectName());
+
+        if (subjectOpt.isEmpty()) {
+            throw new BusinessException("Subject not found");
+        }
+
+        if (subjects.contains(subjectOpt.get())) {
+            throw new BusinessException("User already has this subject");
+        }
+
+        subjects.add(subjectOpt.get());
+
+        return UserMapper.instance()
+                .convertToDto(userRepository.save(user));
+    }
+
+    public List<UserFriendDto> currentUserFriendRecommendation(int depth) {
+        var currentUser = getUser(securityService.getLoggedId());
+        var foaf = getFoafOfUser(currentUser, depth);
+        foaf.removeAll(userListFromUserFriendList(currentUser.getFriends()));
+        Collections.sort(foaf, Comparator.comparingInt((User u) ->
+                        subjectService.usersCommonSubjects(currentUser, u)
+                                .size()).reversed());
+
+
+        return foaf.stream()
+                .map(UserMapper.instance()::convertToFriendDto)
+                .collect(Collectors.toList());
     }
 
 

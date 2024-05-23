@@ -11,7 +11,7 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper(nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
-        uses = {PostMapper.class})
+        uses = {PostMapper.class, SubjectMapper.class})
 public interface UserMapper {
 
     static UserMapper instance() {
