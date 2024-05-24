@@ -51,9 +51,14 @@ public class UserController {
         return userService.userAssignSubject(userAssignSubjectDto);
     }
 
+
     @GetMapping("/friendRecommendation")
-    public List<UserFriendDto> currentUserFriendRecommendation(@RequestParam Integer depth){
-        return userService.currentUserFriendRecommendation(depth);
+    public List<UserFriendDto> currentUserFriendRecommendation(@RequestParam Integer depth,
+                                                                @RequestParam Double commonFriendsWeight,
+                                                                @RequestParam Double commonSubjectsWeight) {
+        return userService.currentUserFriendRecommendation(depth,
+                commonFriendsWeight,
+                commonSubjectsWeight);
     }
 
 }

@@ -16,7 +16,8 @@ CREATE TABLE public.post
 (
     id bigserial not null constraint post_id_pkey primary key,
     user_id varchar,
-    post_text varchar
+    post_text varchar,
+    created_at timestamp default CURRENT_TIMESTAMP
 );
 
 CREATE TABLE public.subject

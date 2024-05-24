@@ -8,6 +8,8 @@ import com.isep.tsn.dal.model.postgres.UserFriend;
 import com.isep.tsn.dal.postgres.repository.SubjectRepository;
 import com.isep.tsn.dal.postgres.repository.UserRepository;
 import com.isep.tsn.exceptions.BusinessException;
+import com.isep.tsn.helper.Helper;
+import com.isep.tsn.helper.QuickSortList;
 import com.isep.tsn.mapper.UserMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,6 +91,8 @@ public class UserService {
         return userList;
     }
 
+
+    //todo change this to exclude user already in friend list
     public List<User> getFoafOfUser(User user, int depth) {
         if (depth == 0) {
             return List.of();
@@ -101,6 +105,7 @@ public class UserService {
         var unique = finalList.stream()
                 .distinct()
                 .collect(Collectors.toList());
+
         if (unique.contains(user)) {
             unique.remove(user);
         }
@@ -129,16 +134,36 @@ public class UserService {
                 .convertToDto(userRepository.save(user));
     }
 
-    public List<UserFriendDto> currentUserFriendRecommendation(int depth) {
+    public Integer usersCommonFriendsNumber(User user1, User user2) {
+        return user1.getFriends()
+                .stream()
+                .filter(user2.getFriends()::contains)
+                .collect(Collectors.toList())
+                .size();
+
+    }
+
+    public List<UserFriendDto> currentUserFriendRecommendation(int depth,
+                                                                Double commonFriendsWeight,
+                                                                Double subjectWeight) {
+
         var currentUser = getUser(securityService.getLoggedId());
         var foaf = getFoafOfUser(currentUser, depth);
         foaf.removeAll(userListFromUserFriendList(currentUser.getFriends()));
-        Collections.sort(foaf, Comparator.comparingInt((User u) ->
-                        subjectService.usersCommonSubjects(currentUser, u)
-                                .size()).reversed());
 
+        var weights = foaf.stream()
+                .map(u -> {
+                    var commonFriends = usersCommonFriendsNumber(currentUser, u);
+                    var commonSubjects = subjectService.usersCommonSubjects(currentUser, u)
+                            .size();
+                    return commonFriends * commonFriendsWeight + commonSubjects * subjectWeight;
+                })
+                .collect(Collectors.toList());
 
-        return foaf.stream()
+        var userRecommendation = (List<User>)Helper.recursiveQuickSort(new QuickSortList<User>(foaf, weights))
+                .getObjects();
+
+        return userRecommendation.stream()
                 .map(UserMapper.instance()::convertToFriendDto)
                 .collect(Collectors.toList());
     }
