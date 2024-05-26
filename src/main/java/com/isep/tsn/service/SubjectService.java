@@ -18,6 +18,9 @@ public class SubjectService {
     @Autowired
     SubjectRepository subjectRepository;
 
+    @Autowired
+    UserService userService;
+
     public List<SubjectDto> findAll() {
         return subjectRepository.findAll()
                 .stream()
@@ -41,6 +44,21 @@ public class SubjectService {
                 .map(SubjectMapper.instance()::convertToDto)
                 .toList();
 
+    }
+
+    public List<SubjectDto> getUserSubjects(User user){
+        return user.getSubjects()
+                .stream()
+                .map(SubjectMapper.instance()::convertToDto)
+                .toList();
+    }
+
+    public List<SubjectDto> getUserSubjects(String userId){
+        var user = userService.getUser(userId);
+        return user.getSubjects()
+                .stream()
+                .map(SubjectMapper.instance()::convertToDto)
+                .toList();
     }
 
 }

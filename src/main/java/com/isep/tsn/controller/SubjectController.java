@@ -25,4 +25,9 @@ public class SubjectController {
         return ResponseEntity.ok(subjectService.addSubject(subjectDto));
     }
 
+    @GetMapping("/posts/{userId}")
+    public ResponseEntity<List<SubjectDto>> getUserSubjects(@PathVariable String userId) {
+        return ResponseEntity.ok(subjectService.getUserSubjects(userId));
+    }
+
 }
