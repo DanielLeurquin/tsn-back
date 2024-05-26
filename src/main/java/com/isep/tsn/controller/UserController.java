@@ -55,11 +55,17 @@ public class UserController {
 
     @GetMapping("/friendRecommendation")
     public List<UserFriendDto> currentUserFriendRecommendation(@RequestParam Integer depth,
-                                                                @RequestParam Double commonFriendsWeight,
-                                                                @RequestParam Double commonSubjectsWeight) {
+                                                               @RequestParam Double commonFriendsWeight,
+                                                               @RequestParam Double commonSubjectsWeight) {
         return userService.currentUserFriendRecommendation(depth,
                 commonFriendsWeight,
                 commonSubjectsWeight);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDto> getUser(@PathVariable String id) {
+        return ResponseEntity.ok(UserMapper.instance()
+                .convertToDto(userService.getUser(id)));
     }
 
 }
