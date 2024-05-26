@@ -18,8 +18,7 @@ public class SubjectService {
     @Autowired
     SubjectRepository subjectRepository;
 
-    @Autowired
-    UserService userService;
+
 
     public List<SubjectDto> findAll() {
         return subjectRepository.findAll()
@@ -53,12 +52,5 @@ public class SubjectService {
                 .toList();
     }
 
-    public List<SubjectDto> getUserSubjects(String userId){
-        var user = userService.getUser(userId);
-        return user.getSubjects()
-                .stream()
-                .map(SubjectMapper.instance()::convertToDto)
-                .toList();
-    }
 
 }
