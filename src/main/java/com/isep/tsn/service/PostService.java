@@ -52,6 +52,13 @@ public class PostService {
 
     }
 
+    public List<PostDto> getPostFromUserId(String userId) {
+        return postRepository.findByUserId(userId)
+                .stream()
+                .map(PostMapper.instance()::convertToDto)
+                .toList();
+    }
+
 
     public List<PostDto> getCurrentUserFeed(int depth,
                                             int recentWeight,

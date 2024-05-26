@@ -7,6 +7,7 @@ import com.isep.tsn.mapper.UserMapper;
 import com.isep.tsn.service.SecurityService;
 import com.isep.tsn.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,32 +24,32 @@ public class UserController {
     SecurityService securityService;
 
     @GetMapping
-    public List<UserDto> getAllUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @GetMapping("/search")
-    public List<UserDto> searchUser(@RequestParam String id) {
-        return userService.searchUser(id);
+    public ResponseEntity<List<UserDto>> searchUser(@RequestParam String id) {
+        return ResponseEntity.ok(userService.searchUser(id));
     }
 
     @PostMapping("/addFriend/{friendId}")
-    public UserDto addFriend(@PathVariable String friendId) {
-        return userService.addFriend(friendId);
+    public ResponseEntity<UserDto> addFriend(@PathVariable String friendId) {
+        return ResponseEntity.ok(userService.addFriend(friendId));
     }
 
     @GetMapping("/foaf")
-    public List<UserFriendDto> getFoafOfUser(@RequestParam int depth) {
+    public ResponseEntity<List<UserFriendDto>> getFoafOfUser(@RequestParam int depth) {
         var user = userService.getUser(securityService.getLoggedId());
-        return userService.getFoafOfUser(user, depth)
+        return ResponseEntity.ok(userService.getFoafOfUser(user, depth)
                 .stream()
                 .map(UserMapper.instance()::convertToFriendDto)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
     @PostMapping("/assignSubject")
-    public UserDto assignSubject(@RequestBody UserAssignSubjectDto userAssignSubjectDto) {
-        return userService.userAssignSubject(userAssignSubjectDto);
+    public ResponseEntity<UserDto> assignSubject(@RequestBody UserAssignSubjectDto userAssignSubjectDto) {
+        return ResponseEntity.ok(userService.userAssignSubject(userAssignSubjectDto));
     }
 
 

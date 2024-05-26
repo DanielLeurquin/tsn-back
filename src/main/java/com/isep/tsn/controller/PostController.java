@@ -4,6 +4,7 @@ import com.isep.tsn.dal.model.dto.CreatePostDto;
 import com.isep.tsn.dal.model.dto.PostDto;
 import com.isep.tsn.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,27 +17,29 @@ public class PostController {
     PostService postService;
 
     @GetMapping
-    public List<PostDto> getPosts() {
-        return postService.findAll();
+    public ResponseEntity<List<PostDto>> getPosts() {
+        return ResponseEntity.ok(postService.findAll());
     }
 
     @PostMapping
-    public PostDto addPost(@RequestBody CreatePostDto dto) {
-        return postService.addPost(dto);
+    public ResponseEntity<PostDto> addPost(@RequestBody CreatePostDto dto) {
+
+        return ResponseEntity.ok(postService.addPost(dto));
     }
 
     @GetMapping("/feed")
-    public List<PostDto> getCurrentUserFeed(@RequestParam int depth,
-                                            @RequestParam int recentWeight,
-                                            @RequestParam int commonFriendsWeight,
-                                            @RequestParam int commonSubjectsWeight) {
-        return postService.getCurrentUserFeed(depth, recentWeight, commonFriendsWeight, commonSubjectsWeight);
+    public ResponseEntity<List<PostDto>> getCurrentUserFeed(@RequestParam int depth,
+                                                            @RequestParam int recentWeight,
+                                                            @RequestParam int commonFriendsWeight,
+                                                            @RequestParam int commonSubjectsWeight) {
+        return ResponseEntity.ok(postService.getCurrentUserFeed(depth,
+                recentWeight, commonFriendsWeight, commonSubjectsWeight));
     }
 
 
-    @GetMapping("/test")
-    public void test() {
-        postService.recursiveQuickSortTest();
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<PostDto>> byUserId(@PathVariable String userId) {
+        return ResponseEntity.ok(postService.getPostFromUserId(userId));
     }
 
 }
