@@ -150,15 +150,15 @@ public class UserService {
         var foaf = getFoafOfUser(currentUser, depth);
         foaf.removeAll(userListFromUserFriendList(currentUser.getFriends()));
 
-        var friendWeights = new ArrayList<Integer>();
-        var subjectWeights = new ArrayList<Integer>();
+        var friendWeights = new ArrayList<Double>();
+        var subjectWeights = new ArrayList<Double>();
 
         for (User u : foaf) {
             var commonFriends = usersCommonFriendsNumber(currentUser, u);
             var commonSubjects = subjectService.usersCommonSubjects(currentUser, u)
                     .size();
-            friendWeights.add(commonFriends);
-            subjectWeights.add(commonSubjects);
+            friendWeights.add((double)commonFriends);
+            subjectWeights.add((double)commonSubjects);
         }
         var linearFriendWeights = Helper.lineariseWeights(friendWeights, 1, 10);
         var linearSubjectWeights = Helper.lineariseWeights(subjectWeights, 1, 10);
@@ -169,14 +169,12 @@ public class UserService {
             weights.add(commonFriendsWeight * linearFriendWeights.get(i) +
                     subjectWeight * linearSubjectWeights.get(i));
         }
-        System.out.println(foaf.stream().map(u -> u.getId()).collect(Collectors.toList()));
-        System.out.println(weights);
+
+
         var userRecommendation =
                 (List<User>) Helper.recursiveQuickSort(new QuickSortList<User>(foaf, weights))
                         .getObjects();
         Collections.reverse(userRecommendation);
-        System.out.print("Output");
-        System.out.println(userRecommendation.stream().map(u -> u.getId()).collect(Collectors.toList()));
 
         return userRecommendation.stream()
                 .map(UserMapper.instance()::convertToFriendDto)

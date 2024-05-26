@@ -61,8 +61,8 @@ public class Helper {
         var max = Collections.max(weights);
         var min = Collections.min(weights);
 
-        var a =((double)(yMax-yMin)) / (double)(max - min);
-        var b = (yMin - a * min);
+        double a =((double)(yMax-yMin)) / (double)(max - min);
+        var b = ((double) yMin - a * (double)min);
         var linearWeights = weights.stream()
                 .map(d -> a * d + b)
                 .toList();
