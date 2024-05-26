@@ -5,6 +5,7 @@ import lombok.Data;
 import java.util.*;
 
 public class Helper {
+
     public static QuickSortList recursiveQuickSort(QuickSortList<?> quickSortList){
         if(quickSortList.weights.size() <= 1){
             return quickSortList;
@@ -34,6 +35,39 @@ public class Helper {
         }
 
         return new QuickSortList(objects,weights);
+    }
+
+    public static List<Double> lineariseWeights(List<Double> weights, double yMin, double yMax){
+        if(weights.isEmpty()){
+            return List.of();
+        }
+        var max = Collections.max(weights);
+        var min = Collections.min(weights);
+
+        var a = (yMax-yMin) / (max - min);
+        var b = yMin - a * min;
+        var linearWeights = weights.stream()
+                .map(d -> a * d + b)
+                .toList();
+
+        return linearWeights;
+    }
+
+
+    public static List<Double> lineariseWeights(List<Integer> weights, int yMin, int yMax){
+        if(weights.isEmpty()){
+            return List.of();
+        }
+        var max = Collections.max(weights);
+        var min = Collections.min(weights);
+
+        var a =((double)(yMax-yMin)) / (double)(max - min);
+        var b = (yMin - a * min);
+        var linearWeights = weights.stream()
+                .map(d -> a * d + b)
+                .toList();
+
+        return linearWeights;
     }
 
 

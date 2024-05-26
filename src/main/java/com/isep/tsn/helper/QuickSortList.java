@@ -40,7 +40,7 @@ public class QuickSortList<T> {
     public QuickSortList<T> equalWeight(Double weight){
         var output = new QuickSortList<T>(new ArrayList<>(), new ArrayList<>());
         for(int i = 0; i < this.weights.size(); i++){
-            if(this.weights.get(i) == weight){
+            if(this.weights.get(i).equals(weight)){
                 output.weights.add(this.weights.get(i));
                 output.objects.add(this.objects.get(i));
             }

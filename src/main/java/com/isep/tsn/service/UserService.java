@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -144,24 +143,40 @@ public class UserService {
     }
 
     public List<UserFriendDto> currentUserFriendRecommendation(int depth,
-                                                                Double commonFriendsWeight,
-                                                                Double subjectWeight) {
+                                                               Double commonFriendsWeight,
+                                                               Double subjectWeight) {
 
         var currentUser = getUser(securityService.getLoggedId());
         var foaf = getFoafOfUser(currentUser, depth);
         foaf.removeAll(userListFromUserFriendList(currentUser.getFriends()));
 
-        var weights = foaf.stream()
-                .map(u -> {
-                    var commonFriends = usersCommonFriendsNumber(currentUser, u);
-                    var commonSubjects = subjectService.usersCommonSubjects(currentUser, u)
-                            .size();
-                    return commonFriends * commonFriendsWeight + commonSubjects * subjectWeight;
-                })
-                .collect(Collectors.toList());
+        var friendWeights = new ArrayList<Integer>();
+        var subjectWeights = new ArrayList<Integer>();
 
-        var userRecommendation = (List<User>)Helper.recursiveQuickSort(new QuickSortList<User>(foaf, weights))
-                .getObjects();
+        for (User u : foaf) {
+            var commonFriends = usersCommonFriendsNumber(currentUser, u);
+            var commonSubjects = subjectService.usersCommonSubjects(currentUser, u)
+                    .size();
+            friendWeights.add(commonFriends);
+            subjectWeights.add(commonSubjects);
+        }
+        var linearFriendWeights = Helper.lineariseWeights(friendWeights, 1, 10);
+        var linearSubjectWeights = Helper.lineariseWeights(subjectWeights, 1, 10);
+
+        var weights = new ArrayList<Double>();
+
+        for (int i = 0; i < foaf.size(); i++) {
+            weights.add(commonFriendsWeight * linearFriendWeights.get(i) +
+                    subjectWeight * linearSubjectWeights.get(i));
+        }
+        System.out.println(foaf.stream().map(u -> u.getId()).collect(Collectors.toList()));
+        System.out.println(weights);
+        var userRecommendation =
+                (List<User>) Helper.recursiveQuickSort(new QuickSortList<User>(foaf, weights))
+                        .getObjects();
+        Collections.reverse(userRecommendation);
+        System.out.print("Output");
+        System.out.println(userRecommendation.stream().map(u -> u.getId()).collect(Collectors.toList()));
 
         return userRecommendation.stream()
                 .map(UserMapper.instance()::convertToFriendDto)

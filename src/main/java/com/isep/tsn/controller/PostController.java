@@ -25,4 +25,18 @@ public class PostController {
         return postService.addPost(dto);
     }
 
+    @GetMapping("/feed")
+    public List<PostDto> getCurrentUserFeed(@RequestParam int depth,
+                                            @RequestParam int recentWeight,
+                                            @RequestParam int commonFriendsWeight,
+                                            @RequestParam int commonSubjectsWeight) {
+        return postService.getCurrentUserFeed(depth, recentWeight, commonFriendsWeight, commonSubjectsWeight);
+    }
+
+
+    @GetMapping("/test")
+    public void test() {
+        postService.recursiveQuickSortTest();
+    }
+
 }
