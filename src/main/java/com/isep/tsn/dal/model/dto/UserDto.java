@@ -17,6 +17,10 @@ public class UserDto {
 
     Role role;
 
+    String name;
+
+    String lastName;
+
     List<PostDto> posts;
 
     List<SubjectDto> subjects;

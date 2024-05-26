@@ -16,6 +16,10 @@ public class UserFriend {
 
     String email;
 
+    String name;
+
+    String lastName;
+
     @Enumerated(EnumType.STRING)
     Role role;
 

@@ -13,6 +13,10 @@ public class UserFriendDto {
 
     String email;
 
+    String name;
+
+    String lastName;
+
     Role role;
 
 }

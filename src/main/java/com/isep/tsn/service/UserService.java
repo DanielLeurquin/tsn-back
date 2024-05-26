@@ -56,16 +56,18 @@ public class UserService {
                 .orElseThrow();
     }
 
-    //todo make the same thing with algorithm implementation
+
     public UserDto addFriend(String friendId) {
         var user1 = getUser(securityService.getLoggedId());
         var user2 = userRepository.findById(friendId)
                 .orElseThrow();
 
         user1.getFriends()
-                .add(UserToUserFriend(user2));
+                .add(UserMapper.instance()
+                        .convertToUserFriend(user2));
         user2.getFriends()
-                .add(UserToUserFriend(user1));
+                .add(UserMapper.instance()
+                        .convertToUserFriend(user1));
 
         userRepository.save(user2);
         return UserMapper.instance()
@@ -73,14 +75,6 @@ public class UserService {
 
     }
 
-    public UserFriend UserToUserFriend(User user) {
-        var userFriend = new UserFriend();
-        userFriend.setId(user.getId());
-        userFriend.setRole(user.getRole());
-        userFriend.setEmail(user.getEmail());
-        userFriend.setPassword(user.getPassword());
-        return userFriend;
-    }
 
     public List<User> userListFromUserFriendList(List<UserFriend> userFriendList) {
         List<User> userList = new ArrayList<>();
@@ -91,7 +85,7 @@ public class UserService {
     }
 
 
-    //todo change this to exclude user already in friend list
+    //todo change this to exclude stop branching when user is already in the list
     public List<User> getFoafOfUser(User user, int depth) {
         if (depth == 0) {
             return List.of();
@@ -157,8 +151,8 @@ public class UserService {
             var commonFriends = usersCommonFriendsNumber(currentUser, u);
             var commonSubjects = subjectService.usersCommonSubjects(currentUser, u)
                     .size();
-            friendWeights.add((double)commonFriends);
-            subjectWeights.add((double)commonSubjects);
+            friendWeights.add((double) commonFriends);
+            subjectWeights.add((double) commonSubjects);
         }
         var linearFriendWeights = Helper.lineariseWeights(friendWeights, 1, 10);
         var linearSubjectWeights = Helper.lineariseWeights(subjectWeights, 1, 10);

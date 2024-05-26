@@ -4,6 +4,7 @@ import com.isep.tsn.dal.model.dto.UserDto;
 import com.isep.tsn.dal.model.dto.UserFriendDto;
 import com.isep.tsn.dal.model.dto.UserRegisterDto;
 import com.isep.tsn.dal.model.postgres.User;
+import com.isep.tsn.dal.model.postgres.UserFriend;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueCheckStrategy;
 import org.mapstruct.NullValuePropertyMappingStrategy;
@@ -19,6 +20,8 @@ public interface UserMapper {
     }
 
     UserDto convertToDto(User user);
+
+    UserFriend convertToUserFriend(User user);
 
     UserFriendDto convertToFriendDto(User user);
     User convertToEntity(UserRegisterDto userRegisterDto);
