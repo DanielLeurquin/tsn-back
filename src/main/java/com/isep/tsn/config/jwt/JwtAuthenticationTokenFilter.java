@@ -48,8 +48,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         response.setHeader("Authorization", "Bearer " + token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
       }
-    }else {
-      throw new BusinessException("No token found");
     }
 
     chain.doFilter(request, response);
