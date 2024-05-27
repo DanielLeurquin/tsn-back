@@ -36,7 +36,10 @@ public class CorsConfig implements Filter {
                 })
                 .collect(Collectors.toList())
                 .contains(true);
-
+        if(!validOrigin){
+            System.out.println("Invalid origin: "+origin);
+            return;
+        }
         if (origin != null && validOrigin) {
             response.setHeader("Access-Control-Allow-Origin", origin);
             response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE");
