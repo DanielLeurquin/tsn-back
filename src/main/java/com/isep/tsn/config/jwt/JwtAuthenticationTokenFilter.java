@@ -2,6 +2,7 @@ package com.isep.tsn.config.jwt;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.isep.tsn.exceptions.BusinessException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -47,6 +48,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         response.setHeader("Authorization", "Bearer " + token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
       }
+    }else {
+      throw new BusinessException("No token found");
     }
 
     chain.doFilter(request, response);
